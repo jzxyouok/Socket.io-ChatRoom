@@ -2,6 +2,10 @@
 
  @section('content')
  @include("chatScreen")
+ <input type="hidden" name="_token" value="{{ csrf_token() }}">
+  <div> Enter your user name : <input type=text id="myname"/> </div>
+
+  <button onclick="addUser()"> connect me : websocket to Node server </button>
      <div class="container">
          <div class="row">
              <div class="col-md-10 col-md-offset-1">
@@ -18,31 +22,48 @@
      </div>
 
      <div>
-        send message "hiiii " to perticular person
+     <br>
+      --------------------------------------------------------------
+      <br>
+        Send message to all via larvel server
+
+        <br>
+        <input type="text" id="inp100" placeholder="Enter your message here !" >
+         <input type="text" id="inp101" placeholder="to whome you want to send message" ><br>
+        <button onclick="function2()"> send ajax to Larvel server </button> <br>
+        ----------------------------------------------------------------
+      </div>
+        
+
         <script>
+         alert("getting executed");
+           function function2() {
+           var msg= document.getElementById("inp100").value;
+           var to= document.getElementById("inp101").value;
+           alert("sending.." + msg);
 
-/*
-        function function1(){
-        alert("sending the ajax request..");
-           var http = new XMLHttpRequest();
-           var url = "/one2onejson";
-           var params = {"message":"ratan"};
-           http.open("POST", url, true);
+              alert("fucntion2 called ");
+                // Get the token value from the hidden form
+                token = $('input[name="_token"]').val();
+                // Send the ajax request
+                $.ajax({
+                    method: "POST",
+                    url: '/one2onejson',
+                    data: {_token: token, msg: msg ,to: to}
+                });
 
-           //Send the proper header information along with the request
-           http.setRequestHeader("Content-type", "text/json");
+                }
 
-           http.onreadystatechange = function() {//Call a function when the state changes.
-               if(http.readyState == 4 && http.status == 200) {
-                   alert("ajax completed response received" );
-               }
-           }
-           http.send(params);
-           }
-           */
+          function addUser(){
+                       alert("add User11")
+                         var userName = document.getElementById("myname").value;
+                         alert("my user name is "+ userName );
+                        socket.emit("init",userName,socket.id);
+                         alert(userName);
 
-
+                       }
         </script>
+
 
         <!-- <button onclick="function1()"> click here</button> -->
 
@@ -51,9 +72,6 @@
                                    <input type="text" name="message" value="Hi How are you ">
                                    <input type="submit" value="send">
                                </form>
-
-
-
      </div>
 
  @endsection

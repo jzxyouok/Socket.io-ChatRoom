@@ -7,7 +7,13 @@
     <script src="https://cdn.socket.io/socket.io-1.3.4.js"></script>
     <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
         <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
-
+  <script>
+   $.ajaxSetup({
+                   headers: {
+                       'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+                   }
+               });
+   </script>
       this is App blade
 
           <div class="container">
