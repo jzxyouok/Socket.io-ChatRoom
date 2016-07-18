@@ -29,3 +29,6 @@ Route::post('/one2one', 'SocketController@one2one');
 Route::post('/one2onejson', 'SocketController@one2onejson');
 Route::get('/writemessage', 'SocketController@writemessage');
 
+Route::post('/loginJson', 'SocketController@HandleloginJson');
+Route::post('/logoutJson', 'SocketController@HandlelogoutJson');
+

@@ -18,37 +18,6 @@ var conn=[];
 var map={};
 var total=[];
 var socket;
-var redisClient = redis.createClient();
-
-redisClient.on("message", function(channel, message) {
-    console.log("(((((((()))))))))))");
-    console.log("mew message in queue " + message + "channel:" + channel);
-
-    if(channel == "myevent"){
-        console.log("emitting perticular socket using io.sockets");
-        //socket.broadcast.to(conn[1]).emit(channel,message);
-        var allJson = JSON.parse(message);
-        console.log("from received json: msg=" + allJson.msg);
-        console.log("from received json: to=" + allJson.to);
-        // lookup in map to get the maps
-        var msg= allJson.msg;
-        var tosendSocketId= map[allJson.to];
-        console.log(tosendSocketId);
-        tosendSocketId = '/#' + tosendSocketId;
-        console.log("sending msg:" + msg + " to:" + allJson.to+ ": " +tosendSocketId);
-        console.log(conn);
-        /* channel that we are sendind is myevent */
-       // io.sockets.broadcast.to(tosendSocketId).emit(channel,msg); won't work
-        io.sockets.connected[tosendSocketId].emit(channel,msg);
-    }else{
-        console.log("emitting to all using  io.sockets");
-        io.sockets.emit(channel, message);
-    }
-    /*************/
-
-
-});
-    // json parse take out the to : & message
 // socket.on is to listen the client
 // to get anything from redis we have only one method redis.on("message");
 // from the channel/ event name we have ro execute perticular code.
@@ -59,7 +28,7 @@ io.on('connection', function (socket) {
     conn.push(socket.id);
     console.log(conn);
     // console.log(conn);
-
+    var redisClient = redis.createClient();
     redisClient.subscribe('message');
     redisClient.subscribe('myevent');
     redisClient.subscribe('myevent1');
@@ -84,7 +53,7 @@ io.on('connection', function (socket) {
         console.log(JSON.stringify(map));
     });
 
-    redisClient.on("message1", function(channel, message) {
+    redisClient.on("message", function(channel, message) {
 
         console.log("(((((((()))))))))))");
         console.log("mew message in queue "+ message + "channel:" + channel);
@@ -145,3 +114,6 @@ io.on('connection', function (socket) {
 
 
 });
+
+
+

@@ -62,6 +62,31 @@
                          alert(userName);
 
                        }
+
+          function loginJson(){
+                        token = $('input[name="_token"]').val();
+                          // Send the ajax request
+                          $.ajax({
+                              method: "POST",
+                              url: '/loginJson',
+                              data: {_token: token, userName: "ratan" ,password: "kadam"}
+                          });
+
+                       }
+
+          function logoutJson(){
+
+          token = $('input[name="_token"]').val();
+                                    // Send the ajax request
+                                    $.ajax({
+                                        method: "POST",
+                                        url: '/logoutJson',
+                                        data: {_token: token}
+                                    });
+
+                      }
+
+                      // he should put event
         </script>
 
 
@@ -73,5 +98,11 @@
                                    <input type="submit" value="send">
                                </form>
      </div>
+
+     <br>
+     -------
+     <br>
+     <button onclick="loginJson()">loginJson</button> <br>
+     <button onclick="logoutJson()">logoutJson</button><br>
 
  @endsection
