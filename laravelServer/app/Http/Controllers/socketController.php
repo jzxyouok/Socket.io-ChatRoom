@@ -44,7 +44,7 @@ class SocketController extends Controller {
     	public function one2onejson(){
     	           // console.log("data" +  data);
     	          $input = Request::all();
-    	          $res =array('msg'=>Request::input('msg'),'to'=>Request::input('to'));
+    	          $res =array('msg'=>Request::input('msg'),'to'=>Request::input('to'),'from'=>Session::get('username'));
     	          $res_json = json_encode($res);
 
 
@@ -88,5 +88,7 @@ class SocketController extends Controller {
                                      		return response()->json(['status' => '200','message' =>"logged out Successfull Session Ended"]);
                                      		//return redirect('writemessage');
                                      	}
+               ////////////////////////////////////////////////
+
 
 }

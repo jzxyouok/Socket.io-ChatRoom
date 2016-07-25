@@ -1,4 +1,7 @@
 /**
+ * Created by ratan_000 on 7/21/2016.
+ */
+/**
  * Created by ratan_000 on 7/15/2016.
  */
 /**
@@ -16,7 +19,6 @@ server.listen(8890);
 
 var conn=[];
 var map={};
-var revmap={};
 var AuthenticatedUsers=[];
 var total=[];
 var socket;
@@ -27,7 +29,6 @@ redisClient.subscribe('myevent');
 redisClient.subscribe('myevent1');
 redisClient.subscribe('login');
 redisClient.subscribe('logout');
-redisClient.subscribe('logOutMe');
 redisClient.subscribe('AddToOnlineUsers');
 
 
@@ -44,28 +45,19 @@ redisClient.on("message", function(channel, message) {
         console.log("from received json: to=" + allJson.to);
         // lookup in map to get the maps
         var msg = allJson.msg;
-        var date = new Date();
-        date= date.toString();
-        console.log("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk");
-        date = date.split(' '); // on space
-        var curr_time = date[1]+ " " + date[2]+ " " + date[3] + " " + date[4];
-        msg=allJson.from + " : " + msg + "      ..." + curr_time.toLocaleLowerCase();
         var tosendSocketId = map[allJson.to];
         console.log(tosendSocketId);
-       // tosendSocketId = '/#' + tosendSocketId;
-         tosendSocketId = tosendSocketId;
+        // tosendSocketId = '/#' + tosendSocketId;
+        tosendSocketId = tosendSocketId;
         console.log("sending msg:" + msg + " to:" + allJson.to + ": " + tosendSocketId);
         console.log(conn);
         console.log("channel is :" + channel);
         /* channel that we are sendind is myevent */
         // io.sockets.broadcast.to(tosendSocketId).emit(channel,msg); won't work
-        var senderSocketId= map[allJson.from];
-        console.log("***(((((***** sender socketId:"+ allJson.from + ":" +senderSocketId);
         if(tosendSocketId){
             io.sockets.connected[tosendSocketId].emit(channel, msg);
-            io.sockets.connected[senderSocketId].emit(channel, msg);
         }else{
-             console.log("tosendSocketId is: " + tosendSocketId )
+            console.log("tosendSocketId is: " + tosendSocketId )
         }
 
     } else if (channel == "logout") {
@@ -82,49 +74,20 @@ redisClient.on("message", function(channel, message) {
         console.log(" invoked the AddToOnlineUsers event" + message);
         var res = JSON.parse(message);
         //console.log(res);
-        console.log("sending to all the clients");
-        io.sockets.emit("NewOnlineUser",res.username);
-        var socketId= "/#"+res.websocketId;
-        map[res.username] =socketId;  // here message is the username send by Larvel server
-        revmap[socketId]=res.username; // maintaining the reverse mapping which will get
-        // useful the disconnected client in 0(1);
-        console.log(map);
-    }else if (channel == "RemoveFromOnlineUsers") {
-        console.log(" invoked the AddToOnlineUsers event" + message);
-        var res = JSON.parse(message);
-        //console.log(res);
-        console.log("sending to the clients");
-        io.sockets.emit("NewOnlineUser",allJson);
         var socketId= "/#"+res.websocketId;
         map[res.username] =socketId;  // here message is the username send by Larvel server
         console.log(map);
-    } else if(channel == "logOutMe"){
-          console.log("^^^^ User wants to get logged out ! ");
-          console.log("message: websocketId "  + message);
-          var userName =revmap[message];
-          delete map[userName];
-          delete revmap[message];
-          console.log(map);
-         console.log(revmap);
-
     } else {
         console.log("emitting to all using  io.sockets::");
-        var msg = JSON.parse(message);
 
-        var date = new Date();
-        date= date.toString();
-        date = date.split(' '); // on space
-        var curr_time = date[1]+ " " + date[2]+ " " + date[3] + " " + date[4];
-         var newmsg= msg.from+ " : " + msg.msg  + "      ..."  + curr_time.toLocaleLowerCase();
-
-        io.sockets.emit(channel, newmsg);
+        io.sockets.emit(channel, message);
 
         console.log("continue");
 
     }
     /*************/
 });
-    // json parse take out the to : & message
+// json parse take out the to : & message
 // socket.on is to listen the client
 // to get anything from redis we have only one method redis.on("message");
 // from the channel/ event name we have ro execute perticular code.
@@ -134,17 +97,18 @@ io.on('connection', function (socket) {
     total.push(socket.id);
     conn.push(socket.id);
     console.log(conn);
+    // console.log(conn);
+
+
+    /*
+     setInterval(function(){
+     io.sockets.emit('kadamEvent',"kadam data");
+     console.log("sent event..");
+     },5000);
+
+     */
 
     // now connection has establish - we can play with the socket events
-    socket.on("getAllonlineUsers",function(){
-        console.log("###########3sending the entire list..");
-        var userArr=Object.keys(map);
-        console.log("all arrays:");
-        console.log(userArr);
-        socket.emit("getAllonlineUsers",userArr);
-
-    });
-
     socket.on("init",function(username,socketid){
         console.log("user :" + username + " sends his identity. with socket id:" + socketid);
         map[username]= socketid;
@@ -175,7 +139,7 @@ io.on('connection', function (socket) {
             /* channel that we are sendind is myevent */
 
             io.sockets.connected[tosendSocketId].emit(channel, msg);
-           // socket.broadcast.to(tosendSocketId).emit(channel,msg);
+            // socket.broadcast.to(tosendSocketId).emit(channel,msg);
 
         }else if(channel == "logout"){
             var allJson = JSON.parse(message);
@@ -191,7 +155,7 @@ io.on('connection', function (socket) {
             console.log(" invoked the AddToOnlineUsers event :" + message);
         }else{
             console.log("sending messsage to every open connection denied..");
-          //  socket.emit(channel, message);
+            //  socket.emit(channel, message);
         }
 
     });
@@ -204,20 +168,21 @@ io.on('connection', function (socket) {
 
     socket.on('disconnect', function() {
         console.log("client disconnected.." + socket.id);
+        // update laravel
+        // update client to remove the disconnected client from client list
+        // io.sockets.emit('kadamEvent', {"disconnected_socket_id" : socket.id});
         console.log("sent event all client to update updated user list");
         console.log(conn);
-
-         user=revmap[socket.id];
-        console.log("disconnected user:" + user);
-
-        io.sockets.emit("OnlineUserDisconnected",user);
-        //
-        delete map[user];
-        delete revmap[socket.id];
-        /////
         redisClient.removeListener('message',function(){
-           console.log("removed listener");
+            console.log("removed listener");
+
         });
+
+        //console.log()
+        //conn[0].disconnect; // this can be called from client only */
+        /* below is just the event actual disconnect will take place at client */
+        //io.sockets.emit('kadamEvent', {"force_disconnected_socket_id" : force})
+        //  redisClient.quit();
     });
 
     redisClient.on('error',function(){

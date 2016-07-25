@@ -1,0 +1,113 @@
+body{
+    background-color: #aaaaaa;
+}
+
+.one2One {
+    width:30%;
+    background-color: blueviolet;
+    color: white;
+    font-weight: 800;
+    align-content: center;
+}
+
+.outerBox{
+    width: 100%;
+    position: absolute;
+    background-color: darkblue;
+    height:430px;
+}
+
+.innerBox{
+    position: relative;
+    background-color: #FFD433;
+    display: inline-block;
+    margin:1%;
+    height:300px;
+    width: 31%;
+    overflow-y: scroll;
+    overflow-x: scroll;
+    vertical-align: top;
+}
+
+.msgBox{
+    width:31%;
+    position: relative;
+    background-color: lightyellow;
+    color:blue;
+    margin:1%;
+    vertical-align: top;
+    display:inline-block;
+    height:65px;
+}
+
+.topBar{
+    width:103%;
+    height:35px;
+    font-size: 30px;
+    background-color:green;
+    color:white;
+    font-weight: 800;
+    margin-left: auto;
+    margin-right:auto;
+    border: 5px solid black;
+
+}
+
+
+.topBar span{
+    margin-left: 45%;
+    margin-top:2%;
+}
+
+.one2one{
+    width:103%;
+    height:35px;
+    background-color: #F71818;
+    opacity: 0.7;
+}
+
+
+.one2one span{
+  margin-left: 40%;
+}
+
+.longButton{
+    width: 100%;
+    border-radius: 10px;
+    background-color: #008800;
+    color:white;
+    font-weight: 800;
+    bottom: 0;
+}
+
+.longInput{
+    margin-bottom:2px;
+    width:100%;
+    background-color: papayawhip;
+    border:3px solid saddlebrown ;
+}
+
+.BigInput{
+    margin-bottom:2px;
+    width:100%;
+    height:35px;
+    background-color: papayawhip;
+    border:3px solid saddlebrown ;
+}
+
+.disable{
+    background-color:brown;
+    height:100%;
+    width:100%;
+}
+
+.logout{
+    margin-left: 52%;
+    color:white;
+    background-color: red;
+}
+
+
+
+
+

@@ -11,7 +11,7 @@
 |
 */
 
-Route::get('/', function () {
+Route::get('/1', function () {
     return view('welcome');
 });
 
@@ -28,7 +28,14 @@ Route::post('/sendmessage', 'SocketController@sendMessage');
 Route::post('/one2one', 'SocketController@one2one');
 Route::post('/one2onejson', 'SocketController@one2onejson');
 Route::get('/writemessage', 'SocketController@writemessage');
-
 Route::post('/loginJson', 'SocketController@HandleloginJson');
 Route::post('/logoutJson', 'SocketController@HandlelogoutJson');
 
+/////////////////// Chat Allication Login API's ////////////////////
+Route::get('/', 'chatApplicationController@AppLogin');
+Route::post('/chatScreen', 'chatApplicationController@chatScreen');
+Route::post('/informNodeIamLoggedIn','chatApplicationController@informNodeIamLoggedIn');
+Route::post('/sendToAll', 'chatApplicationController@sendToAll');
+Route::post('/logOutMe', 'chatApplicationController@logOutMe');
+
+///////////////////////////

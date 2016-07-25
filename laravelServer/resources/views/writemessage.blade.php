@@ -58,6 +58,7 @@
                        alert("add User11")
                          var userName = document.getElementById("myname").value;
                          alert("my user name is "+ userName );
+                         alert(socket.id);
                         socket.emit("init",userName,socket.id);
                          alert(userName);
 
